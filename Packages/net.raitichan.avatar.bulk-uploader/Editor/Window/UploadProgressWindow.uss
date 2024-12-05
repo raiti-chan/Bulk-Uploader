@@ -26,4 +26,5 @@ AvatarProgress.error .unity-progress-bar__progress {
 .button-group {
     justify-content: flex-end;
     flex-direction: row;
+    flex-shrink: 0;
 }
