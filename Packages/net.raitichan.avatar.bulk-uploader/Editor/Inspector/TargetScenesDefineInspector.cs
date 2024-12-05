@@ -42,7 +42,6 @@ namespace net.raitichan.avatar.bulk_uploader.Editor.Inspector {
 				SerializedProperty param = this._scenesSerializedProperty.GetArrayElementAtIndex(i);
 				sceneField.BindProperty(param);
 			};
-			listView.fixedItemHeight = 50;
 
 
 			listView.BindProperty(this._scenesSerializedProperty);
