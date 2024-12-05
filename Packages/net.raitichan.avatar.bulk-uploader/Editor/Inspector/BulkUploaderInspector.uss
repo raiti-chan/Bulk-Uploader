@@ -1,0 +1,33 @@
+﻿AdvancedListView > TextField {
+    display: none;
+}
+
+AdvancedListView > .header {
+    border-color: var(--unity-theme-border-color-2);
+    border-width: 1px;
+    border-bottom-width: 0;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    padding: 3px;
+}
+
+AdvancedListView > ScrollView {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+SceneField,
+AvatarField {
+    flex-direction: row;
+    align-items: center;
+}
+SceneField Toggle,
+AvatarField Toggle {
+    margin: 0;
+}
+
+SceneField PropertyField,
+AvatarField PropertyField {
+    margin-left: 10px;
+    flex-grow: 1;
+}

@@ -1,4 +1,5 @@
-﻿using net.raitichan.avatar.bulk_uploader.Runtime.ScriptableObject;
+﻿using net.raitichan.avatar.bulk_uploader.Editor.Inspector.Element;
+using net.raitichan.avatar.bulk_uploader.Runtime.ScriptableObject;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
@@ -8,6 +9,7 @@ using UnityEngine.UIElements;
 namespace net.raitichan.avatar.bulk_uploader.Editor.Inspector {
 	[CustomEditor(typeof(TargetScenesDefine))]
 	internal class TargetScenesDefineInspector : UnityEditor.Editor {
+		private const string USS_GUID = "82d4ebb141e046149a0dc13187d1cb05";
 		private VisualElement _rootElement = null!;
 
 		private SerializedProperty _scenesSerializedProperty = null!;
@@ -17,39 +19,38 @@ namespace net.raitichan.avatar.bulk_uploader.Editor.Inspector {
 		}
 
 		public override VisualElement CreateInspectorGUI() {
+			string ussPath = AssetDatabase.GUIDToAssetPath(USS_GUID);
+			StyleSheet styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(ussPath);
+
 			VisualElement root = new();
+			root.styleSheets.Add(styleSheet);
+			root.AddToClassList("root");
+
 			this._rootElement = root;
 			this.CreateGUI();
 			return this._rootElement;
 		}
 
 		private void CreateGUI() {
-			ListView listView = new() {
-				focusable = true,
-				name = "ScenesListView",
-				showAddRemoveFooter = true,
-				reorderable = true,
-				showAlternatingRowBackgrounds = AlternatingRowBackground.All,
-				showBorder = true,
-				headerTitle = "Scenes",
-				showFoldoutHeader = true,
-				reorderMode = ListViewReorderMode.Animated
+			AdvancedListView listView = new("Scenes") {
+				name = "ScenesListView"
 			};
-
+			listView.makeHeader += () => new Label("Scenes");
 			listView.makeItem += () => new SceneField();
 			listView.bindItem += (element, i) => {
 				SceneField sceneField = (SceneField)element;
 				SerializedProperty param = this._scenesSerializedProperty.GetArrayElementAtIndex(i);
 				sceneField.BindProperty(param);
 			};
-			
-			
+			listView.fixedItemHeight = 50;
+
+
 			listView.BindProperty(this._scenesSerializedProperty);
 			this._rootElement.Add(listView);
-			
+
 			Button button = new(this.OnUpload) {
 				text = "Upload",
-				style = { marginTop = 10}
+				style = { marginTop = 10 }
 			};
 			this._rootElement.Add(button);
 		}
@@ -59,23 +60,4 @@ namespace net.raitichan.avatar.bulk_uploader.Editor.Inspector {
 		}
 	}
 
-	internal class SceneField : VisualElement {
-		private readonly PropertyField _scenePropertyField;
-		
-		private SerializedProperty _property = null!;
-		private SerializedProperty _sceneSerializedProperty = null!;
-		
-		public SceneField() {
-			this._scenePropertyField = new PropertyField {
-				label = ""
-			};
-			this.Add(this._scenePropertyField);
-		}
-
-		public void BindProperty(SerializedProperty prop) {
-			this._property = prop;
-			this._sceneSerializedProperty = this._property.FindPropertyRelative(nameof(SceneDefine.Scene));
-			this._scenePropertyField.BindProperty(this._sceneSerializedProperty);
-		}
-	}
 }

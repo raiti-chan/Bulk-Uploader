@@ -1,7 +1,6 @@
-﻿using System;
+﻿using net.raitichan.avatar.bulk_uploader.Runtime.ScriptableObject;
 using UnityEditor;
 using UnityEngine;
-using VRC.SDKBase;
 
 #nullable enable
 
@@ -21,10 +20,5 @@ namespace net.raitichan.avatar.bulk_uploader.Runtime.Component {
 			Undo.RegisterCreatedObjectUndo(gameObject, "Create TargetAvatarDefine Object");
 		}
 #endif
-	}
-
-	[Serializable]
-	public class AvatarDefine {
-		public VRC_AvatarDescriptor? Avatar;
 	}
 }
