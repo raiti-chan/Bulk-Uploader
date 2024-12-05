@@ -220,7 +220,12 @@ namespace net.raitichan.avatar.bulk_uploader.Editor {
 			if (avatar == null) return;
 			PipelineManager? pm = avatar.gameObject.GetComponent<PipelineManager>();
 			if (pm == null) return;
-			if (string.IsNullOrEmpty(pm.blueprintId)) return;
+			if (string.IsNullOrEmpty(pm.blueprintId)) {
+				Debug.Log($"BlueprintId is Empty : {avatar.name}");
+				_window.SetAvatarProgress(sceneName, avatar, "BlueprintIDがありません。1度手動でアップロードしてください。", 100.0f);
+				_window.SetAvatarError(sceneName, avatar);
+				return;
+			}
 
 
 			builder.OnSdkBuildStart += OnBuildStart;
