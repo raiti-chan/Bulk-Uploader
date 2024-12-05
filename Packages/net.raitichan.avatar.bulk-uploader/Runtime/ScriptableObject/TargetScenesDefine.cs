@@ -19,11 +19,15 @@ namespace net.raitichan.avatar.bulk_uploader.Runtime.ScriptableObject {
 #if UNITY_EDITOR
 		public SceneAsset? Scene;
 #endif
+		
+		public AvatarDefine[] Avatars = null!;
 	}
-
+	
 	[Serializable]
 	public class AvatarDefine {
 		public bool Enable;
 		public VRC_AvatarDescriptor? Avatar;
+		public string? BlueprintID;
+		public string? AvatarName;
 	}
 }
