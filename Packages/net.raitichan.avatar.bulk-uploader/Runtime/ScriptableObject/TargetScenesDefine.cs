@@ -19,6 +19,8 @@ namespace net.raitichan.avatar.bulk_uploader.Runtime.ScriptableObject {
 #if UNITY_EDITOR
 		public SceneAsset? Scene;
 #endif
+	}
+
 	[Serializable]
 	public class AvatarDefine {
 		public bool Enable;
