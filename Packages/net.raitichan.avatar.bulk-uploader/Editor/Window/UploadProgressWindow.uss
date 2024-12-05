@@ -1,0 +1,29 @@
+﻿.root {
+    flex-grow: 1;
+}
+
+.root .unity-scroll-view__content-container {
+    padding: 5px;
+}
+
+SceneProgress,
+AvatarProgress {
+    margin: 2px;
+    padding: 5px;
+    border-color: var(--unity-theme-border-color-17);
+    border-width: 1px;
+}
+
+AvatarProgress.error .unity-progress-bar__progress {
+    background-color: #ff6262;
+}
+
+.avatar-progress-group {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.button-group {
+    justify-content: flex-end;
+    flex-direction: row;
+}
