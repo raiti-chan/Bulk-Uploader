@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using VRC.SDKBase;
@@ -20,14 +21,14 @@ namespace net.raitichan.avatar.bulk_uploader.Runtime.ScriptableObject {
 		public SceneAsset? Scene;
 #endif
 		
-		public AvatarDefine[] Avatars = null!;
+		public List<AvatarDefine> Avatars = null!;
 	}
 	
 	[Serializable]
 	public class AvatarDefine {
 		public bool Enable;
 		public VRC_AvatarDescriptor? Avatar;
+		public string? ObjectName;
 		public string? BlueprintID;
-		public string? AvatarName;
 	}
 }
