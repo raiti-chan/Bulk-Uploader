@@ -85,12 +85,10 @@ namespace net.raitichan.avatar.bulk_uploader.Editor.Inspector {
 			foreach (SceneDefine sceneDef in targetObject.Scenes) {
 				ScanAvatar(sceneDef, isLoadScene);
 			}
-			
-			targetObject.MarkDirty();
 			AssetDatabase.SaveAssetIfDirty(targetObject);
 		}
 
-		private static void ScanAvatar(SceneDefine sceneDef, bool isLoadScene) {
+		private void ScanAvatar(SceneDefine sceneDef, bool isLoadScene) {
 			if (sceneDef.Scene == null) return;
 			
 			bool isAdditionalLoadedScene = false;
@@ -121,7 +119,9 @@ namespace net.raitichan.avatar.bulk_uploader.Editor.Inspector {
 				bool already = false;
 				foreach (AvatarDefine avatarDef in sceneDef.Avatars.Where(avatarDef => avatarDef.BlueprintID == blueprintId)) {
 					already = true;
+					if (avatarDef.ObjectName == pipelineManager.gameObject.name) break;
 					avatarDef.ObjectName = pipelineManager.gameObject.name;
+					this.target.MarkDirty();
 					break;
 				}
 				if (already) continue;
@@ -132,11 +132,15 @@ namespace net.raitichan.avatar.bulk_uploader.Editor.Inspector {
 					ObjectName = pipelineManager.gameObject.name,
 					BlueprintID = blueprintId
 				});
+				this.target.MarkDirty();
 			}
-
-			sceneDef.Avatars = sceneDef.Avatars
+			List<AvatarDefine> newAvatars = sceneDef.Avatars
 				.Where(define => pipelineManagers.Select(manager => manager.blueprintId).Contains(define.BlueprintID))
 				.ToList();
+			if (sceneDef.Avatars.Count != newAvatars.Count) {
+				sceneDef.Avatars = newAvatars;
+				this.target.MarkDirty();
+			}
 
 			if (isAdditionalLoadedScene) {
 				EditorSceneManager.CloseScene(scene, true);
