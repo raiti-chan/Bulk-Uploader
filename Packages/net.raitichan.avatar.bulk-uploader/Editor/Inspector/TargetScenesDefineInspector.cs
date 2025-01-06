@@ -58,7 +58,7 @@ namespace net.raitichan.avatar.bulk_uploader.Editor.Inspector {
 			this._rootElement.Add(listView);
 
 			this._rootElement.Add(new Button(this.OnScanAvatar) {
-				text = "Scan AllScenens Avatar",
+				text = "Scan AllScenes Avatar",
 				style = { marginTop = 10, marginBottom = 10}
 			});
 			this._rootElement.Add(new SceneListView(this._scenesSerializedProperty));
