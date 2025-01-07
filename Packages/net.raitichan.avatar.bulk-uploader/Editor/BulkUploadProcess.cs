@@ -43,7 +43,7 @@ namespace net.raitichan.avatar.bulk_uploader.Editor {
 		public static async Task StartUpload(TargetScenesDefine scenesDefine) {
 			SceneDefine[] sceneDefines = scenesDefine.Scenes.Where(define => define.Enable && define.Scene != null).ToArray();
 			int sceneCount = sceneDefines.Length;
-			int avatarCount = sceneDefines.SelectMany(define => define.Avatars).Count();
+			int avatarCount = sceneDefines.SelectMany(define => define.Avatars).Count(avatar => avatar.Enable);
 			bool result = EditorUtility.DisplayDialog("Bulk Uploader", $"{sceneCount}シーン、計{avatarCount}アバターの一括アップロードを行います。", "Upload", "Cancel");
 			if (!result) return;
 
@@ -65,6 +65,7 @@ namespace net.raitichan.avatar.bulk_uploader.Editor {
 				if (sceneDefine.Scene == null) continue;
 				_window.RegisterScene(sceneDefine.Scene.name);
 				foreach (AvatarDefine avatarDefine in sceneDefine.Avatars.Where(avatarDefine => !string.IsNullOrEmpty(avatarDefine.BlueprintID))) {
+					if (!avatarDefine.Enable) continue;
 					_window.RegisterAvatar(sceneDefine.Scene.name, avatarDefine.BlueprintID ?? "???", avatarDefine.ObjectName ?? "???");
 				}
 			}
@@ -105,7 +106,7 @@ namespace net.raitichan.avatar.bulk_uploader.Editor {
 					_sceneCancellationTokenSource = new CancellationTokenSource();
 					CancellationTokenSource linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(allCancellationToken, _sceneCancellationTokenSource.Token);
 					try {
-						await Upload(sceneDefine.Avatars.ToArray(), scene, linkedTokenSource.Token);
+						await Upload(sceneDefine.Avatars.Where(avatarDef => avatarDef.Enable).ToArray(), scene, linkedTokenSource.Token);
 					} catch (OperationCanceledException e) {
 						Debug.Log(e);
 						if (allCancellationToken.IsCancellationRequested) {
