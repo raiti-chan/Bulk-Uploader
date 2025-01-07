@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using net.raitichan.avatar.bulk_uploader.Editor.Inspector.Element;
 using net.raitichan.avatar.bulk_uploader.Runtime.ScriptableObject;
@@ -72,7 +73,11 @@ namespace net.raitichan.avatar.bulk_uploader.Editor.Inspector {
 		}
 
 		private async void OnUpload() {
-			await BulkUploadProcess.StartUpload((TargetScenesDefine)this.target);
+			try {
+				await BulkUploadProcess.StartUpload((TargetScenesDefine)this.target);
+			} catch (Exception e) {
+				Debug.LogException(e);
+			}
 		}
 
 		private void OnScanAvatar() {

@@ -249,9 +249,13 @@ namespace net.raitichan.avatar.bulk_uploader.Editor {
 		}
 
 		private static async void OnUploadProgress(object sender, (string status, float percentage) tuple) {
-			Debug.Log($"OnUploadProgress : {tuple.status} : {tuple.percentage}");
-			await UniTask.SwitchToMainThread();
-			_window.SetAvatarProgress(_processingSceneName, _processingBlueprintId, $"Uploading : {tuple.status}", tuple.percentage * 100.0f);
+			try {
+				Debug.Log($"OnUploadProgress : {tuple.status} : {tuple.percentage}");
+				await UniTask.SwitchToMainThread();
+				_window.SetAvatarProgress(_processingSceneName, _processingBlueprintId, $"Uploading : {tuple.status}", tuple.percentage * 100.0f);
+			} catch (Exception e) {
+				Debug.LogException(e);
+			}
 		}
 
 		private static void OnUploadError(object sender, string s) {
