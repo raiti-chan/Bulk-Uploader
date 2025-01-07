@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using net.raitichan.avatar.bulk_uploader.Editor.Inspector.Element;
 using net.raitichan.avatar.bulk_uploader.Runtime.ScriptableObject;
 using UnityEditor;
 using UnityEditor.SceneManagement;
-using UnityEditor.UIElements;
 using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -43,21 +41,6 @@ namespace net.raitichan.avatar.bulk_uploader.Editor.Inspector {
 		}
 
 		private void CreateGUI() {
-			AdvancedListView listView = new("Scenes") {
-				name = "ScenesListView"
-			};
-			listView.makeHeader += () => new Label("Scenes");
-			listView.makeItem += () => new SceneField();
-			listView.bindItem += (element, i) => {
-				SceneField sceneField = (SceneField)element;
-				SerializedProperty param = this._scenesSerializedProperty.GetArrayElementAtIndex(i);
-				sceneField.BindProperty(param);
-			};
-
-
-			listView.BindProperty(this._scenesSerializedProperty);
-			this._rootElement.Add(listView);
-
 			this._rootElement.Add(new Button(this.OnScanAvatar) {
 				text = "Scan AllScenes Avatar",
 				style = { marginTop = 10, marginBottom = 10}
