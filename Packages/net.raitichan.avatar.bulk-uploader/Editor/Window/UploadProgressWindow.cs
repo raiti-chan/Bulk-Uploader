@@ -3,7 +3,6 @@ using net.raitichan.avatar.bulk_uploader.Editor.Window.Element;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
-using VRC.SDKBase;
 
 #nullable enable
 
@@ -12,10 +11,12 @@ namespace net.raitichan.avatar.bulk_uploader.Editor.Window {
 		private const string USS_GUID = "e058a7e8d8ad48a98017eebc24994e26";
 		private static UploadProgressWindow? _currentWindow;
 
+		/*
 		[MenuItem("Raitichan/BulkUploader/Show Progress Window")]
 		public static void ShowWindowCommand() {
 			ShowWindow();
 		}
+		*/
         
 		public static UploadProgressWindow ShowWindow() {
 			if (_currentWindow != null) _currentWindow.Close();
@@ -65,21 +66,21 @@ namespace net.raitichan.avatar.bulk_uploader.Editor.Window {
 			}
 		}
 
-		internal void RegisterAvatar(string sceneName, VRC_AvatarDescriptor avatar) {
+		internal void RegisterAvatar(string sceneName, string blueprintId, string avatarName) {
 			if (this._sceneProgressesDict.TryGetValue(sceneName, out SceneProgress progress)) {
-				progress.RegisterAvatar(avatar);
+				progress.RegisterAvatar(blueprintId, avatarName);
 			}
 		}
 		
-		internal void SetAvatarProgress(string sceneName, VRC_AvatarDescriptor avatar, string text, float value) {
+		internal void SetAvatarProgress(string sceneName, string blueprintId, string text, float value) {
 			if (this._sceneProgressesDict.TryGetValue(sceneName, out SceneProgress progress)) {
-				progress.SetAvatarProgress(avatar ,text, value);
+				progress.SetAvatarProgress(blueprintId ,text, value);
 			}
 		}
 
-		internal void SetAvatarError(string sceneName, VRC_AvatarDescriptor avatar) {
+		internal void SetAvatarError(string sceneName, string blueprintId) {
 			if (this._sceneProgressesDict.TryGetValue(sceneName, out SceneProgress progress)) {
-				progress.SetAvatarError(avatar);
+				progress.SetAvatarError(blueprintId);
 			}
 		}
 		
