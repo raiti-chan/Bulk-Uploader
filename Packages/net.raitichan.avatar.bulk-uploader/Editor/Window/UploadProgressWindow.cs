@@ -3,7 +3,6 @@ using net.raitichan.avatar.bulk_uploader.Editor.Window.Element;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
-using VRC.SDKBase;
 
 #nullable enable
 
@@ -12,10 +11,12 @@ namespace net.raitichan.avatar.bulk_uploader.Editor.Window {
 		private const string USS_GUID = "e058a7e8d8ad48a98017eebc24994e26";
 		private static UploadProgressWindow? _currentWindow;
 
+		/*
 		[MenuItem("Raitichan/BulkUploader/Show Progress Window")]
 		public static void ShowWindowCommand() {
 			ShowWindow();
 		}
+		*/
         
 		public static UploadProgressWindow ShowWindow() {
 			if (_currentWindow != null) _currentWindow.Close();

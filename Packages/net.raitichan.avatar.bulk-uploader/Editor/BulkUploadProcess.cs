@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using net.raitichan.avatar.bulk_uploader.Editor.Window;
 using net.raitichan.avatar.bulk_uploader.Runtime.ScriptableObject;
-using net.raitichan.avatar.bulk_uploader.Runtime.Component;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -76,45 +75,6 @@ namespace net.raitichan.avatar.bulk_uploader.Editor {
 			} finally {
 				EditorUtility.DisplayDialog("Bulk Uploader", "アバターのアップロードが完了しました。", "OK");
 				_allCancellationTokenSource.Dispose();
-			}
-		}
-
-		public static async Task StartUpload(TargetAvatarsDefine avatarsDefine) {
-			AvatarDefine[] avatarDefines = avatarsDefine.Avatars.Where(define => define.Enable && define.Avatar != null).ToArray();
-			int avatarCount = avatarDefines.Length;
-
-			bool result = EditorUtility.DisplayDialog("Bulk Uploader", $"計{avatarCount}アバターの一括アップロードを行います。", "Upload", "Cancel");
-			if (!result) return;
-			if (VRCSdkControlPanel.window == null) {
-				EditorUtility.DisplayDialog("Bulk Uploader", "VRCSDKコントロールパネルを開いて、ログインしてください。", "OK");
-				return;
-			}
-
-			if (!APIUser.IsLoggedIn) {
-				VRCSdkControlPanel.window.Focus();
-				EditorUtility.DisplayDialog("Bulk Uploader", "VRCSDKコントロールパネルからログインしてください。", "OK");
-				return;
-			}
-
-			_builder.RegisterBuilder(VRCSdkControlPanel.window);
-			_window = UploadProgressWindow.ShowWindow();
-
-			_window.RegisterScene(avatarsDefine.gameObject.scene.name);
-
-			foreach (AvatarDefine avatarDefine in avatarDefines) {
-				if (avatarDefine.Avatar == null) continue;
-				_window.RegisterAvatar(avatarsDefine.gameObject.scene.name, avatarDefine.BlueprintID ?? "???", avatarDefine.ObjectName ?? "???");
-			}
-
-			_allCancellationTokenSource = new CancellationTokenSource();
-			_sceneCancellationTokenSource = new CancellationTokenSource();
-			CancellationTokenSource linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(_allCancellationTokenSource.Token, _sceneCancellationTokenSource.Token);
-			try {
-				await Upload(avatarDefines, avatarsDefine.gameObject.scene, linkedTokenSource.Token);
-			} finally {
-				EditorUtility.DisplayDialog("Bulk Uploader", "アバターのアップロードが完了しました。", "OK");
-				_allCancellationTokenSource.Dispose();
-				_sceneCancellationTokenSource.Dispose();
 			}
 		}
 
