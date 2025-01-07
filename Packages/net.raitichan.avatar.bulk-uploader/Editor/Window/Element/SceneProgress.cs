@@ -7,7 +7,7 @@ using VRC.SDKBase;
 namespace net.raitichan.avatar.bulk_uploader.Editor.Window.Element {
 	internal class SceneProgress : Box {
 
-		private readonly Dictionary<VRC_AvatarDescriptor, AvatarProgress> _avatarProgressesDict = new();
+		private readonly Dictionary<string, AvatarProgress> _avatarProgressesDict = new();
 		private readonly VisualElement _avatarProgressGroup;
 		private readonly ProgressBar _progressBar;
 		
@@ -26,22 +26,22 @@ namespace net.raitichan.avatar.bulk_uploader.Editor.Window.Element {
 			this.Add(this._avatarProgressGroup);
 		}
 
-		public void RegisterAvatar(VRC_AvatarDescriptor avatar) {
-			if (this._avatarProgressesDict.ContainsKey(avatar)) return;
-			AvatarProgress avatarProgress = new(avatar.gameObject.name);
+		public void RegisterAvatar(string blueprintId, string avatarName) {
+			if (this._avatarProgressesDict.ContainsKey(blueprintId)) return;
+			AvatarProgress avatarProgress = new(blueprintId, avatarName);
 			this._avatarProgressGroup.Add(avatarProgress);
-			this._avatarProgressesDict.Add(avatar, avatarProgress);
+			this._avatarProgressesDict.Add(blueprintId, avatarProgress);
 			
 		}
 		
-		public void SetAvatarProgress(VRC_AvatarDescriptor avatar, string? title, float value) {
-			if (this._avatarProgressesDict.TryGetValue(avatar, out AvatarProgress progress)) {
+		public void SetAvatarProgress(string blueprintId, string? title, float value) {
+			if (this._avatarProgressesDict.TryGetValue(blueprintId, out AvatarProgress progress)) {
 				progress.SetAvatarProgress(title, value);
 			}
 		}
 		
-		internal void SetAvatarError(VRC_AvatarDescriptor avatar) {
-			if (this._avatarProgressesDict.TryGetValue(avatar, out AvatarProgress progress)) {
+		internal void SetAvatarError(string blueprintId) {
+			if (this._avatarProgressesDict.TryGetValue(blueprintId, out AvatarProgress progress)) {
 				progress.SetAvatarError();
 			}
 		}

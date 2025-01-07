@@ -8,10 +8,12 @@ namespace net.raitichan.avatar.bulk_uploader.Editor.Window.Element {
 		private readonly ProgressBar _progressBar;
 		
 		
-		public AvatarProgress(string avatarName) {
+		public AvatarProgress(string blueprintId, string avatarName) {
 			Label label = new("Avatar : " + avatarName);
 			this.Add(label);
-
+			label = new Label("Blueprint ID : " + blueprintId);
+			this.Add(label);
+			
 			this._progressBar = new ProgressBar {
 				value = 0,
 				title = ""
