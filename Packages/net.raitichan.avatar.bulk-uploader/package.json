@@ -1,7 +1,7 @@
 {
   "name": "net.raitichan.avatar.bulk-uploader",
   "displayName": "Bulk Uploader",
-  "version": "0.2.0-beta.1",
+  "version": "0.3.0",
   "unity": "2022.3",
   "description": "複数アバターを一括でアップロードします",
   "author": {
