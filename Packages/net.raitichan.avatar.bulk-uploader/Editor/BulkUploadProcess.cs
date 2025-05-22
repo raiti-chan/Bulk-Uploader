@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
+using net.raitichan.avatar.bulk_uploader.Editor.ReflectionHelper.VRC.SDKBase;
 using net.raitichan.avatar.bulk_uploader.Editor.Window;
 using net.raitichan.avatar.bulk_uploader.Runtime.ScriptableObject;
 using UnityEditor;
@@ -196,6 +197,7 @@ namespace net.raitichan.avatar.bulk_uploader.Editor {
 			try {
 				_processingSceneName = scene.name;
 				_processingBlueprintId = avatarDefine.BlueprintID ?? "???";
+				VRCCopyrightAgreementHelper.SaveContentAgreementToSession(_processingBlueprintId);
 				VRCAvatar avatarData = await VRCApi.GetAvatar(pipelineManager.blueprintId, true, avatarCancellationToken);
 				await builder.BuildAndUpload(avatar.gameObject, avatarData, null, avatarCancellationToken);
 			} finally {
