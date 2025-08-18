@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -194,7 +195,20 @@ namespace net.raitichan.avatar.bulk_uploader.Editor {
 			builder.OnSdkUploadFinish += OnUploadFinish;
 			builder.OnSdkUploadStateChange += OnUploadStateChange;
 
+			List<GameObject>? inactiveGameObjects = null;
+
 			try {
+				if (!avatar.gameObject.activeInHierarchy) {
+					inactiveGameObjects = new List<GameObject>();
+					for (var transform = avatar.transform; transform != null; transform = transform.parent) {
+						var go = transform.gameObject;
+						if (!go.activeSelf) {
+							go.SetActive(true);
+							inactiveGameObjects.Add(go);
+						}
+					}
+				}
+
 				_processingSceneName = scene.name;
 				_processingBlueprintId = avatarDefine.BlueprintID ?? "???";
 				VRCCopyrightAgreementHelper.SaveContentAgreementToSession(_processingBlueprintId);
@@ -214,6 +228,10 @@ namespace net.raitichan.avatar.bulk_uploader.Editor {
 				builder.OnSdkUploadSuccess -= OnUploadSuccess;
 				builder.OnSdkUploadFinish -= OnUploadFinish;
 				builder.OnSdkUploadStateChange -= OnUploadStateChange;
+
+				if (inactiveGameObjects != null)
+					foreach (var go in inactiveGameObjects)
+						go.SetActive(false);
 			}
 		}
 
