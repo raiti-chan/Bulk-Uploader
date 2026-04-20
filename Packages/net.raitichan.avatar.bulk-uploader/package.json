@@ -1,7 +1,7 @@
 {
   "name": "net.raitichan.avatar.bulk-uploader",
   "displayName": "Bulk Uploader",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "unity": "2022.3",
   "description": "複数アバターを一括でアップロードします",
   "author": {
@@ -12,6 +12,7 @@
   "url": "",
   "repo": "",
   "vpmDependencies": {
-    "com.vrchat.avatars": ">=3.5.0"
+    "com.vrchat.avatars": ">=3.10.2",
+    "com.vrchat.base": ">=3.10.2"
   }
 }
