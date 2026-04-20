@@ -71,4 +71,11 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
-/[Aa]ssets/
+/[Aa]ssets/**
+!/[Aa]ssets/Bulk Uploader/
+!/[Aa]ssets/Bulk Uploader.meta
+!/[Aa]ssets/Bulk Uploader/Test/
+!/[Aa]ssets/Bulk Uploader/Test.meta
+!/[Aa]ssets/Bulk Uploader/Test/**
+
+!/Packages/net.raitichan.avatar.bulk-uploader/Editor/Plugins/x86_64/UnityToastNotification.dll
