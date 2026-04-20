@@ -21,11 +21,11 @@ using VRC.SDKBase.Editor.Api;
 
 namespace net.raitichan.avatar.bulk_uploader.Editor {
     internal static class BulkUploadProcess {
-        private static VRCSdkControlPanelAvatarBuilder _builder { get; } = new();
+        private static VRCSdkControlPanelAvatarBuilder Builder { get; } = new();
         private static UploadProgressWindow _window = null!;
         private static string _processingSceneName = "";
         private static string _processingBlueprintId = "";
-        private static bool _errorFlag = false;
+        private static bool _errorFlag;
 
         private static CancellationTokenSource? _allCancellationTokenSource;
         private static CancellationTokenSource? _sceneCancellationTokenSource;
@@ -63,7 +63,7 @@ namespace net.raitichan.avatar.bulk_uploader.Editor {
                 return;
             }
 
-            _builder.RegisterBuilder(VRCSdkControlPanel.window);
+            Builder.RegisterBuilder(VRCSdkControlPanel.window);
             _window = UploadProgressWindow.ShowWindow();
 
             foreach (SceneDefine sceneDefine in sceneDefines) {
@@ -183,7 +183,7 @@ namespace net.raitichan.avatar.bulk_uploader.Editor {
         }
 
         private static async Task Upload(AvatarDefine avatarDefine, Scene scene, CancellationToken avatarCancellationToken) {
-            VRCSdkControlPanelAvatarBuilder builder = _builder;
+            VRCSdkControlPanelAvatarBuilder builder = Builder;
 
             PipelineManager? pipelineManager = scene.GetRootGameObjects()
                 .SelectMany(o => o.GetComponentsInChildren<PipelineManager>())
@@ -216,45 +216,46 @@ namespace net.raitichan.avatar.bulk_uploader.Editor {
             builder.OnSdkUploadFinish += OnUploadFinish;
             builder.OnSdkUploadStateChange += OnUploadStateChange;
 
-			List<GameObject>? inactiveGameObjects = null;
+            List<GameObject>? inactiveGameObjects = null;
 
-			try {
-				if (!avatar.gameObject.activeInHierarchy) {
-					inactiveGameObjects = new List<GameObject>();
-					for (var transform = avatar.transform; transform != null; transform = transform.parent) {
-						var go = transform.gameObject;
-						if (!go.activeSelf) {
-							go.SetActive(true);
-							inactiveGameObjects.Add(go);
-						}
-					}
-				}
+            try {
+                if (!avatar.gameObject.activeInHierarchy) {
+                    inactiveGameObjects = new List<GameObject>();
+                    for (Transform? transform = avatar.transform; transform != null; transform = transform.parent) {
+                        GameObject go = transform.gameObject;
+                        if (go.activeSelf) continue;
+                        go.SetActive(true);
+                        inactiveGameObjects.Add(go);
+                    }
+                }
 
-				_processingSceneName = scene.name;
-				_processingBlueprintId = avatarDefine.BlueprintID ?? "???";
-				VRCCopyrightAgreementHelper.SaveContentAgreementToSession(_processingBlueprintId);
-				VRCAvatar avatarData = await VRCApi.GetAvatar(pipelineManager.blueprintId, true, avatarCancellationToken);
-				await builder.BuildAndUpload(avatar.gameObject, avatarData, null, avatarCancellationToken);
-			} finally {
-				builder.OnSdkBuildStart -= OnBuildStart;
-				builder.OnSdkBuildProgress -= OnBuildProgress;
-				builder.OnSdkBuildError -= OnBuildError;
-				builder.OnSdkBuildSuccess -= OnBuildSuccess;
-				builder.OnSdkBuildFinish -= OnBuildFinish;
-				builder.OnSdkBuildStateChange -= OnBuildStateChange;
+                _processingSceneName = scene.name;
+                _processingBlueprintId = avatarDefine.BlueprintID ?? "???";
+                VRCCopyrightAgreementHelper.SaveContentAgreementToSession(_processingBlueprintId);
+                VRCAvatar avatarData = await VRCApi.GetAvatar(pipelineManager.blueprintId, true, avatarCancellationToken);
+                await builder.BuildAndUpload(avatar.gameObject, avatarData, null, avatarCancellationToken);
+            } finally {
+                builder.OnSdkBuildStart -= OnBuildStart;
+                builder.OnSdkBuildProgress -= OnBuildProgress;
+                builder.OnSdkBuildError -= OnBuildError;
+                builder.OnSdkBuildSuccess -= OnBuildSuccess;
+                builder.OnSdkBuildFinish -= OnBuildFinish;
+                builder.OnSdkBuildStateChange -= OnBuildStateChange;
 
-				builder.OnSdkUploadStart -= OnUploadStart;
-				builder.OnSdkUploadProgress -= OnUploadProgress;
-				builder.OnSdkUploadError -= OnUploadError;
-				builder.OnSdkUploadSuccess -= OnUploadSuccess;
-				builder.OnSdkUploadFinish -= OnUploadFinish;
-				builder.OnSdkUploadStateChange -= OnUploadStateChange;
+                builder.OnSdkUploadStart -= OnUploadStart;
+                builder.OnSdkUploadProgress -= OnUploadProgress;
+                builder.OnSdkUploadError -= OnUploadError;
+                builder.OnSdkUploadSuccess -= OnUploadSuccess;
+                builder.OnSdkUploadFinish -= OnUploadFinish;
+                builder.OnSdkUploadStateChange -= OnUploadStateChange;
 
-				if (inactiveGameObjects != null)
-					foreach (var go in inactiveGameObjects)
-						go.SetActive(false);
-			}
-		}
+                if (inactiveGameObjects != null) {
+                    foreach (GameObject? go in inactiveGameObjects) {
+                        go.SetActive(false);
+                    }
+                }
+            }
+        }
 
         private static void OnBuildStart(object sender, object o) {
             Debug.Log($"OnBuildStart : {o.GetType()}");
