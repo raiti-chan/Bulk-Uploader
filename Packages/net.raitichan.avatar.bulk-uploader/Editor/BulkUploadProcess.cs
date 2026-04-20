@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -215,28 +216,45 @@ namespace net.raitichan.avatar.bulk_uploader.Editor {
             builder.OnSdkUploadFinish += OnUploadFinish;
             builder.OnSdkUploadStateChange += OnUploadStateChange;
 
-            try {
-                _processingSceneName = scene.name;
-                _processingBlueprintId = avatarDefine.BlueprintID ?? "???";
-                VRCCopyrightAgreementHelper.SaveContentAgreementToSession(_processingBlueprintId);
-                VRCAvatar avatarData = await VRCApi.GetAvatar(pipelineManager.blueprintId, true, avatarCancellationToken);
-                await builder.BuildAndUpload(avatar.gameObject, avatarData, null, avatarCancellationToken);
-            } finally {
-                builder.OnSdkBuildStart -= OnBuildStart;
-                builder.OnSdkBuildProgress -= OnBuildProgress;
-                builder.OnSdkBuildError -= OnBuildError;
-                builder.OnSdkBuildSuccess -= OnBuildSuccess;
-                builder.OnSdkBuildFinish -= OnBuildFinish;
-                builder.OnSdkBuildStateChange -= OnBuildStateChange;
+			List<GameObject>? inactiveGameObjects = null;
 
-                builder.OnSdkUploadStart -= OnUploadStart;
-                builder.OnSdkUploadProgress -= OnUploadProgress;
-                builder.OnSdkUploadError -= OnUploadError;
-                builder.OnSdkUploadSuccess -= OnUploadSuccess;
-                builder.OnSdkUploadFinish -= OnUploadFinish;
-                builder.OnSdkUploadStateChange -= OnUploadStateChange;
-            }
-        }
+			try {
+				if (!avatar.gameObject.activeInHierarchy) {
+					inactiveGameObjects = new List<GameObject>();
+					for (var transform = avatar.transform; transform != null; transform = transform.parent) {
+						var go = transform.gameObject;
+						if (!go.activeSelf) {
+							go.SetActive(true);
+							inactiveGameObjects.Add(go);
+						}
+					}
+				}
+
+				_processingSceneName = scene.name;
+				_processingBlueprintId = avatarDefine.BlueprintID ?? "???";
+				VRCCopyrightAgreementHelper.SaveContentAgreementToSession(_processingBlueprintId);
+				VRCAvatar avatarData = await VRCApi.GetAvatar(pipelineManager.blueprintId, true, avatarCancellationToken);
+				await builder.BuildAndUpload(avatar.gameObject, avatarData, null, avatarCancellationToken);
+			} finally {
+				builder.OnSdkBuildStart -= OnBuildStart;
+				builder.OnSdkBuildProgress -= OnBuildProgress;
+				builder.OnSdkBuildError -= OnBuildError;
+				builder.OnSdkBuildSuccess -= OnBuildSuccess;
+				builder.OnSdkBuildFinish -= OnBuildFinish;
+				builder.OnSdkBuildStateChange -= OnBuildStateChange;
+
+				builder.OnSdkUploadStart -= OnUploadStart;
+				builder.OnSdkUploadProgress -= OnUploadProgress;
+				builder.OnSdkUploadError -= OnUploadError;
+				builder.OnSdkUploadSuccess -= OnUploadSuccess;
+				builder.OnSdkUploadFinish -= OnUploadFinish;
+				builder.OnSdkUploadStateChange -= OnUploadStateChange;
+
+				if (inactiveGameObjects != null)
+					foreach (var go in inactiveGameObjects)
+						go.SetActive(false);
+			}
+		}
 
         private static void OnBuildStart(object sender, object o) {
             Debug.Log($"OnBuildStart : {o.GetType()}");
