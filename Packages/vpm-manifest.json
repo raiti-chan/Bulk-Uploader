@@ -22,28 +22,27 @@
       "dependencies": {}
     },
     "jp.lilxyzw.liltoon": {
-      "version": "1.8.3",
+      "version": "2.3.2",
       "dependencies": {}
     },
     "nadena.dev.modular-avatar": {
-      "version": "1.11.0",
+      "version": "1.16.2",
       "dependencies": {
-        "com.vrchat.avatars": ">=3.7.4",
-        "nadena.dev.ndmf": ">=1.6.0 <2.0.0-a"
+        "nadena.dev.ndmf": ">=1.11.0 <2.0.0-a"
       }
     },
     "nadena.dev.ndmf": {
-      "version": "1.6.2",
+      "version": "1.11.0",
       "dependencies": {}
     },
     "com.vrchat.base": {
-      "version": "3.8.0",
+      "version": "3.10.2",
       "dependencies": {}
     },
     "com.vrchat.avatars": {
-      "version": "3.8.0",
+      "version": "3.10.2",
       "dependencies": {
-        "com.vrchat.base": "3.8.0"
+        "com.vrchat.base": "3.10.2"
       }
     }
   }
